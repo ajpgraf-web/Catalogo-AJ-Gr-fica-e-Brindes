@@ -87,7 +87,14 @@ def encontrar_imagem(row):
     return IMAGEM_PADRAO
 
 
-st.title("✨ A.J. Gráfica & Brindes")
+# Exibe a logo oficial centralizada ou no topo (com largura ajustada para 250 pixels)
+if os.path.exists("imagens/logo.png"):
+    st.image("imagens/logo.png", width=250)
+elif os.path.exists("imagens/logo.jpg"):
+    st.image("imagens/logo.jpg", width=250)
+else:
+    st.title("✨ A.J. Gráfica & Brindes")
+
 st.write("Escolha seus produtos, monte seu pedido e envie direto para nosso WhatsApp!")
 
 try:
@@ -113,42 +120,39 @@ try:
     carrinho = []
     total_geral = 0.0
 
-    # Layout em Grid de 3 Colunas
-    cols_por_linha = 3
-    colunas = st.columns(cols_por_linha)
-
+    # Exibição dos produtos em formato de cartão responsivo (perfeito para telemóvel e PC)
     for idx, row in df_exibicao.reset_index(drop=True).iterrows():
-        col = colunas[idx % cols_por_linha]
 
-        with col:
-            caminho_img = encontrar_imagem(row)
+        with st.container():
+            col_img, col_info = st.columns([1, 2])
 
-            # Exibe Imagem
-            st.image(caminho_img, width=300)
+            with col_img:
+                caminho_img = encontrar_imagem(row)
+                st.image(caminho_img, use_container_width=True)
 
-            # Detalhes do Produto
-            st.subheader(row['nome'])
-            st.caption(row.get('descricao', ''))
-            st.markdown(f"### **R$ {float(row['preco_un']):.2f}**")
+            with col_info:
+                st.subheader(row['nome'])
+                st.caption(row.get('descricao', ''))
+                st.markdown(f"### **R$ {float(row['preco_un']):.2f}**")
 
-            # Seletor de Quantidade
-            qtd = st.number_input(
-                "Quantidade:",
-                min_value=0,
-                value=0,
-                step=1,
-                key=f"prod_{idx}_{row.get('id', idx)}"
-            )
+                # Seletor de Quantidade
+                qtd = st.number_input(
+                    "Quantidade:",
+                    min_value=0,
+                    value=0,
+                    step=1,
+                    key=f"prod_{idx}_{row.get('id', idx)}"
+                )
 
-            if qtd > 0:
-                subtotal = qtd * float(row['preco_un'])
-                carrinho.append({
-                    "nome": row['nome'],
-                    "qtd": qtd,
-                    "preco_un": float(row['preco_un']),
-                    "subtotal": subtotal
-                })
-                total_geral += subtotal
+                if qtd > 0:
+                    subtotal = qtd * float(row['preco_un'])
+                    carrinho.append({
+                        "nome": row['nome'],
+                        "qtd": qtd,
+                        "preco_un": float(row['preco_un']),
+                        "subtotal": subtotal
+                    })
+                    total_geral += subtotal
 
             st.markdown("---")
 
