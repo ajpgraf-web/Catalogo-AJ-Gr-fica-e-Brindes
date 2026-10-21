@@ -4,21 +4,27 @@ import urllib.parse
 import os
 import unicodedata
 
-# 1. Configuração da página
+# 1. Configuração da página (DEVE SER A PRIMEIRA CHAMADA DO STREAMLIT)
 st.set_page_config(
     page_title="A.J. Gráfica & Brindes | Catálogo",
     page_icon="🛍️",
     layout="wide"
 )
 
-# Estilização CSS personalizada para dar visual de loja
-st.markdown("""
-    <style>
-    .stApp {
-        background-color: #f8f9fa;
-    }
-    </style>
-""", unsafe_allow_html=True)
+# 2. Ocultar menu, cabeçalho, rodapé e estilização de fundo
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            header {visibility: hidden;}
+            footer {visibility: hidden;}
+            [data-testid="stHeader"] {visibility: hidden;}
+            [data-testid="stToolbar"] {visibility: hidden;}
+            .stApp {
+                background-color: #f8f9fa;
+            }
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 SEU_WHATSAPP = "5591987140119"
 IMAGEM_PADRAO = "https://via.placeholder.com/400x300?text=Sem+Foto"
